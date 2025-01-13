@@ -1,10 +1,10 @@
-# 😊 SmileUp
+# 😊 LinkUpNow
 
-**SmileUp** is a gamified socializing app designed for lyf co-living spaces, aimed at fostering a stronger sense of community among residents. With SmileUp, residents can easily connect, plan activities, and earn community points ("Smiles") that reward their participation in the community.
+**LinkUpNow** is a gamified socializing app designed for lyf co-living spaces, aimed at fostering a stronger sense of community among residents. With LinkUpNow, residents can easily connect, plan activities, and earn community points ("Smiles") that reward their participation in the community.
 
 ## 🚀 Live Demo
 
-Check out our live demo here: [🌐 Live Demo](https://smileup-angle-hack-global-five.vercel.app/)
+Check out our live demo here: [🌐 Live Demo](https://link-up-now.vercel.app/)
 
 ## 📚 Table of Contents
 
@@ -42,14 +42,14 @@ Follow these steps to get a local copy up and running:
 1. **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/ahzia/Smileup-angle-hack-global.git
-    cd smileup
+    git clone https://github.com/Fiston-pro/LinkUpNow.git
+    cd LinkUpNow
     ```
 
 2. **Install Dependencies:**
 
     ```bash
-    npm install
+    pnpm install
     ```
 
 3. **Run the App:**
@@ -65,7 +65,7 @@ Follow these steps to get a local copy up and running:
 1. **Create and Join Plans**: Explore and join activities happening within your lyf community. 🏡
 2. **Earn Smiles**: Participate in daily and weekly missions to earn Smiles and redeem vouchers. 🎖️
 3. **AI Chat**: Get personalized recommendations for events and connect with others. 🤝
-4. **Temporary Access**: Access SmileUp through a unique link to explore plans without creating an account. 🌐
+4. **Temporary Access**: Access LinkUpNow through a unique link to explore plans without creating an account. 🌐
 
 ## 🔮 Future Improvements
 
@@ -96,4 +96,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Contact
 
-For questions, contact the SmileUp team.
+For questions, contact the LinkUpNow team.
