@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light mode (default) */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --mainBg: #f5f5f5; /* Lighter background for light mode */
+  --secondary: #e0e0e0;
+  --cardBg: #ffffff;
+  --cardBgLight: #f0f0f0;
+  --textPrimary: #212121;
+  --textSecondary: #6b7280;
+  --highlight: #ff6900;
+  --success: #4caf50;
+  --error: #f44336;
+  --warning: #ff9800;
+}
+
+/* Dark mode */
+.dark {
+  --background: #1a1034;
+  --foreground: #ededed;
+  --mainBg: #1a1034;
+  --secondary: #2e2a5a;
+  --cardBg: #2b2f33;
+  --cardBgLight: #242830;
+  --textPrimary: #f5f5f5;
+  --textSecondary: #b3b4c1;
+  --highlight: #ff6900; /* LYF Color */
+  --success: #4caf50;
+  --error: #f44336;
+  --warning: #ff9800;
+
+  /* Message Bubbles Finished */
+  --df-messenger-message-bot-background: linear-gradient(
+    to bottom right,
+    var(--secondary),
+    #2b2f33
+  );
+  --df-messenger-message-user-background: linear-gradient(
+    to bottom right,
+    #242830,
+    #2b2f33
+  );
+  --df-messenger-message-user-font-color: white;
+  --df-messenger-message-bot-writing-font-color: white; /* Dark text for writing indicator */
+  /* Input Area */
+  --df-messenger-input-box-background: rgba(46, 42, 90, 0.7);
+  --df-messenger-input-box-border: 1px solid var(--secondary);
+  --df-messenger-input-box-focus-border: 2px solid var(--highlight);
+  /* Feedback Icons */
+  --df-messenger-message-feedback-icon-font-color: var(--highlight);
+  /* Chat Area */
+  --df-messenger-chat-background: rgba(26, 16, 52, 0.7);
+  /* Titlebar */
+  --df-messenger-titlebar-background: linear-gradient(
+    to right,
+    #b04b04,
+    #ff6900,
+    #c65300
+  ); /* Gradient background for the title bar */
+  --df-messenger-titlebar-font-color: var(--textPrimary);
+  /* Buttons */
+  --df-messenger-button-titlebar-color: var(--highlight);
+  --df-messenger-chat-scroll-button-background: var(--foreground);
+  --df-messenger-chat-scroll-button-font-color: var(--highlight);
+  --df-messenger-link-font-color: var(--highlight);
+  --df-messenger-link-hover-font-color: var(--highlight);
+  /* Specific border radius for bot messages */
+  --df-messenger-message-bot-border-top-left-radius: 16px;
+  --df-messenger-message-bot-border-top-right-radius: 16px;
+  --df-messenger-message-bot-border-bottom-left-radius: 16px;
+  --df-messenger-message-bot-border-bottom-right-radius: 16px;
+
+  /* Specific border radius for user messages */
+  --df-messenger-message-user-border-top-left-radius: 16px;
+  --df-messenger-message-user-border-top-right-radius: 16px;
+  --df-messenger-message-user-border-bottom-left-radius: 16px;
+  --df-messenger-message-user-border-bottom-right-radius: 16px;
+  --df-messenger-chat-padding: 16px; /* Increased padding for a spacious look */
+  --df-messenger-titlebar-background: var(--df-messenger-chat-background);
+  --df-messenger-titlebar-padding: 15px; /* Padding of the title bar */
+  --df-messenger-titlebar-title-font-size: 18px; /* Title text size */
+  --df-messenger-titlebar-title-font-weight: 600; /* Font weight for the title text */
+  --df-messenger-chat-border: none; /* No border for chat */
+  --df-messenger-chat-border-radius: 8px; /* Rounded corners for chat */
+
+  /* General styling for the chat widget */
+  --df-messenger-font-family: "Arial", sans-serif; /* Font family for the widget */
+  --df-messenger-font-size: 14px; /* Text size for the widget */
+  --df-messenger-font-color: var(--textPrimary); /* Text color for the widget */
+  --df-messenger-primary-color: var(
+    --highlight
+  ); /* Primary color for various elements */
+  --df-messenger-input-background: var(
+    --df-messenger-chat-background
+  ); /* Background color for the input area */
+  --df-messenger-message-feedback-icon-background: transparent; /* Background color for the feedback icons */
+  --df-messenger-message-feedback-icon-font-color-active: var(
+    --highlight
+  ); /* Active color for the feedback icons */
+  --df-messenger-send-icon-color: var(
+    --highlight
+  ); /* Color for the send icon */
+}
+
+body {
+  background-color: var(--mainBg);
+  color: var(--foreground);
+}
+
+/* Profile background styling with gradient overlay */
+.profile-background {
+  position: relative;
+  height: 250px; /* Adjust this height as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden; /* Ensures content doesn’t spill out */
+
+  /* Background image with gradient overlay */
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      /* Slight dark overlay at the top */ rgba(26, 16, 52, 1)
+        /* Fade smoothly into main background color */
+    ),
+    url("../../images/lyf-Funan-Singapore.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Additional utility classes */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (max-width: 600px) {
+  body,
+  #message {
+    margin-top: 0;
+    background: #1a1034;
+    box-shadow: none;
+  }
+}
