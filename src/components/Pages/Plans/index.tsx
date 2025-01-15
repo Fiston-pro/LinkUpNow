@@ -19,7 +19,7 @@ export default function Plans() {
   };
 
   return (
-    <div className="container mx-auto pb-14">
+    <div className="container mx-auto lg:w-1/2 pb-14">
       {/* AI Chat Button and Main Page */}
       {!aiChatOpen && (
         <>
