@@ -1,4 +1,8 @@
 import Modal from "@/components/common/Modal";
+import { useAuth } from '@/components/AuthContext';
+import { useRouter } from 'next/navigation';
+
+
 import { userData } from "../../../lib/user";
 import { BiEdit } from "react-icons/bi";
 import Image from "next/image";
@@ -6,6 +10,11 @@ import PlanCard from "../Pages/Plans/PlanCard";
 import { userPlans } from "../../../lib/plans";
 
 export default function Profile({ isOpen, onClose, user }) {
+
+  const { logOut } = useAuth();
+  const router = useRouter();
+
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="container">
@@ -67,9 +76,14 @@ export default function Profile({ isOpen, onClose, user }) {
                 </li>))}
             </ul>
           </div>
-          {/* Settings Button */}
-          <button className="mt-6 mb-6 py-2 px-6 bg-highlight text-mainBg font-bold rounded-full">
-            Settings
+          {/* LogOut Button */}
+          <button 
+            onClick={() => {
+              logOut();
+              router.push('/');
+          }}
+          className="mt-6 mb-6 py-2 px-6 bg-highlight text-mainBg font-bold rounded-full">
+            LogOut
           </button>
         </div>
       </div>

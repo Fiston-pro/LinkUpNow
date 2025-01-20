@@ -4,6 +4,9 @@ import "./globals.css";
 import Script from "next/script";
 import Providers from "@/redux/Providers";
 
+import { AuthContextProvider } from "@/components/AuthContext";
+
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -30,10 +33,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
+        <AuthContextProvider>
         {/* Wrap children in Redux Provider */}
         <Providers>
           {children}
         </Providers>
+        </AuthContextProvider>
         {/* Dialogflow Messenger and related scripts */}
         <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css" />
         <Script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js" strategy="afterInteractive" />
