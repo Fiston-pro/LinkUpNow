@@ -37,7 +37,7 @@ export interface PlanType {
     id: string; // Firestore-generated ID
     name: string; // Name of the plan (e.g., "Beach Cleanup")
     description: string; // Plan description
-    dateTime: string; // When the plan happens
+    eventTime: string; // When the plan happens
     hostelId: string; // Reference to the associated hostel (hostelId)
     createdBy: string; // userId of the creator
     participants: string[]; // Array of userIds
@@ -222,9 +222,42 @@ export const AuthContextProvider = ({
       return await refreshHostels();
     }
 
+    const addNewPlan = async (name: string, description: string, eventTime: Date, hostelId: string ) => {
+
+      // add the plan to the firebase database
+      const planId = `${Date.now()}`;
+      console.log('planId:', planId);
+
+      const plansRef = collection(db, "plans");
+      await setDoc(doc(plansRef, planId), {
+        id: planId,
+        name: name,
+        description: description,
+        eventTime: eventTime,
+        hostelId: hostelId,
+        createdBy: user.uid,
+        participants: [user.uid],
+        createdAt: serverTimestamp(),
+      });
+
+      // Update the hostel with the new plan
+      const hostelsRef = collection(db, "hostels");
+      const hostelDoc = doc(db, "hostels", hostelId);
+      const hostelSnap = await getDoc(hostelDoc);
+      if (hostelSnap.exists()) {
+        const hostelData = hostelSnap.data() as HostelType;
+        await setDoc(hostelDoc, {
+          ...hostelData,
+          plans: [...hostelData.plans, planId],
+        });
+      }
+
+      return await fetchPlansForHostel(hostelId);
+    }
+
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );

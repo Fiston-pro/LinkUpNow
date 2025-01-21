@@ -5,6 +5,7 @@ import { HostelType, useAuth } from '@/components/AuthContext';
 import Modal from "@/components/common/AddHostelModal";
 import { useRouter } from 'next/navigation';
 import { auth } from "@/lib/firebase/initFirebase";
+import AddPlanModal from "@/components/common/AddPlanModal";
 
 const ADMIN_UID = "xKW62ulTdGcWB85GXOjerBK6pyR2"; // Replace with your UID
 
@@ -12,8 +13,12 @@ const ADMIN_UID = "xKW62ulTdGcWB85GXOjerBK6pyR2"; // Replace with your UID
 export default function AdminDashboard() {
 
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isAddPlanModalOpen, setAddPlanModalOpen] = useState(false);
+  const [hostelId, setHostelId] = useState('');
+
   const [hostels, setHostels] = useState<HostelType[]>([]);
   
+
   const {
     user,
     refreshHostels, // Array of hostels fetched from Firestore
@@ -21,6 +26,7 @@ export default function AdminDashboard() {
     addPlan, // Function to add a new plan to a hostel
     fetchPlansForHostel, // Function to fetch plans for a specific hostel
     deleteHostel, // Function to delete a hostel
+    addNewPlan, // Function to add a new plan
   } = useAuth(); // Using the context to access the state and functions
 
   const router = useRouter();
@@ -33,6 +39,13 @@ export default function AdminDashboard() {
     console.log('add hostel')
     setHostels( await addHostel(name, location))
     setModalOpen(false); // Close modal after adding hostel
+  };
+
+  const handleSavePlan = (  name: string, description: string, eventTime: Date ) => {
+    // Add logic to save the plan
+    addNewPlan(name, description, eventTime, hostelId);
+    setAddPlanModalOpen(false); // Close modal after adding plan
+    
   };
 
   const handleRefreshHostels = async () => {
@@ -95,7 +108,9 @@ export default function AdminDashboard() {
               {/* Add New Plan Section */}
               <div className="mt-4">
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => {
+                    setAddPlanModalOpen(true)
+                    setHostelId(hostel.id)}}
                   className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-3 rounded"
                 >
                   + Add New Plan
@@ -119,6 +134,13 @@ export default function AdminDashboard() {
           onSubmit={handleAddHostel}
         />
       )}
+      {isAddPlanModalOpen && (
+      <AddPlanModal
+        isOpen={isAddPlanModalOpen}
+        onClose={() => setAddPlanModalOpen(false)}
+        onSave={handleSavePlan}
+      />
+    )}
     </div>
   );
 }
