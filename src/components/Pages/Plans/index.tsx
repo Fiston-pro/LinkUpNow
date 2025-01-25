@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import AIChat from "../Messages/AiChat";
 import { TbMessageChatbotFilled } from "react-icons/tb";
+import { FaPlus } from "react-icons/fa";
 
 export default function Plans() {
   const user = useSelector((state: RootState) => state.user.loggedInUser);
@@ -21,7 +22,6 @@ export default function Plans() {
   return (
     <div className="container mx-auto lg:w-1/2 pb-14">
       {/* AI Chat Button and Main Page */}
-      {!aiChatOpen && (
         <>
           {/* Profile Section with Background */}
           <div className={`relative profile-background ${aiChatOpen ? "opacity-50" : ""}`}>
@@ -46,13 +46,12 @@ export default function Plans() {
             role="button"
             tabIndex={0}
           >
-            <TbMessageChatbotFilled size={40} />
+            <FaPlus size={40} />
           </div>
         </>
-      )}
 
       {/* AI Chat Component */}
-      <AIChat aiChatOpen={aiChatOpen} setAiChatOpen={setAiChatOpen} />
+      {/* <AIChat aiChatOpen={aiChatOpen} setAiChatOpen={setAiChatOpen} /> */}
     </div>
   );
 }
