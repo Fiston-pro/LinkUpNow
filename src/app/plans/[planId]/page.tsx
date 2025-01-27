@@ -1,32 +1,44 @@
 "use client";
 
-import { useEffect } from "react";
-import { FaWindowClose, FaChevronRight } from 'react-icons/fa';
+import { useEffect, useState } from "react";
+
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuth, PlanType } from '@/components/AuthContext';
+
 import { RxCross2 } from "react-icons/rx";
 import { GoReport } from "react-icons/go";
 
-import classNames from 'classnames';
 import Members from "@/components/common/Members";
-import { MdAccessTime, MdCalendarToday, MdLocationOn, MdPeople, MdPerson } from "react-icons/md";
+import { MdAccessTime, MdCalendarToday, MdLocationOn, MdPerson } from "react-icons/md";
 
-interface PageProps {
-  params: {
-    id: string; // Dynamic `id` from the URL
-  };
-}
+export default function PlanPage() {
 
-export default function PlanPage({ params }: PageProps) {
-  const { id } = params;
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [planData, setPlanData] = useState<PlanType>();
+
+  const { getPlanData } = useAuth();
+
+  useEffect(() => {
+    const parts = pathname.split('/');
+    const planId = parts[2]; // This will give you '1737397179478'
+    console.log(planId); // Output: 1737397179478
+    getPlanData(planId).then((data:PlanType) => {
+      setPlanData(data);
+      console.log('plan data here:', data);
+    });
+  }, [pathname])
 
   // Dummy data for the plan
-  const plan = {
-    name: "Sample Plan",
-    description: "This is a sample description of the plan.",
-    location: "Sample Location",
-    participants: 5,
-    date: "2021-09-25",
-    createdBy: "John Doe",
-  };
+  // const plan = {
+  //   name: "Sample Plan",
+  //   description: "This is a sample description of the plan.",
+  //   location: "Sample Location",
+  //   participants: 5,
+  //   date: "2021-09-25",
+  //   createdBy: "John Doe",
+  // };
 
   return (
     <>
@@ -44,16 +56,16 @@ export default function PlanPage({ params }: PageProps) {
             </div>
 
           <div className="p-4 mt-10 flex-1 overflow-y-auto bg-mainBg text-textPrimary">
-            <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
+            <h3 className="text-2xl font-bold mb-4">{planData?.name}</h3>
 
             {/* Plan Description */}
             <section className="mb-6">
-              <p className="text-textSecondary">{plan.description}</p>
+              <p className="text-textSecondary">{planData?.description}</p>
             </section>
 
             {/* Participants */}
             <section className="mb-6">
-              <Members participants={plan.participants} />
+              <Members participants={5} />
             </section>
 
             {/* Plan Details */}
@@ -66,7 +78,7 @@ export default function PlanPage({ params }: PageProps) {
                     </div>
                   <div>
                     <h5 className="text-lg font-semibold">Date</h5>
-                    <p className="text-textSecondary">{plan.date}</p>
+                    <p className="text-textSecondary">{planData?.eventTime}</p>
                   </div>
                 </div>
 
@@ -77,7 +89,7 @@ export default function PlanPage({ params }: PageProps) {
                 </div>
                   <div>
                     <h5 className="text-lg font-semibold">Time</h5>
-                    <p className="text-textSecondary">{plan.date}</p>
+                    <p className="text-textSecondary">{planData?.eventTime}</p>
                   </div>
                 </div>
 
@@ -88,7 +100,7 @@ export default function PlanPage({ params }: PageProps) {
                 </div>
                   <div>
                     <h5 className="text-lg font-semibold">Created by</h5>
-                    <p className="text-textSecondary">{plan.createdBy}</p>
+                    <p className="text-textSecondary">{planData?.createdBy}</p>
                   </div>
                 </div>
 
@@ -99,7 +111,7 @@ export default function PlanPage({ params }: PageProps) {
                 </div>
                   <div>
                     <h5 className="text-lg font-semibold">Location</h5>
-                    <p className="text-textSecondary">{plan.location}</p>
+                    <p className="text-textSecondary">Here</p>
                   </div>
                 </div>
 

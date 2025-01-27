@@ -255,9 +255,31 @@ export const AuthContextProvider = ({
       return await fetchPlansForHostel(hostelId);
     }
 
+    //function to return all the data of the hostel, it's name, location and plans
+    const getHostelData = async (hostelId: string) => {
+      const hostelDoc = doc(db, "hostels", hostelId);
+      const hostelSnap = await getDoc(hostelDoc);
+      if (hostelSnap.exists()) {
+        return hostelSnap.data() as HostelType;
+      } else {
+       return "No such document!";
+      }
+    }
+
+    //function to return all data of the plan, it's name, description, eventTime, hostelId, createdBy, participants, maxParticipants and createdAt
+    const getPlanData = async (planId: string) => {
+      const planDoc = doc(db, "plans", planId);
+      const planSnap = await getDoc(planDoc);
+      if (planSnap.exists()) {
+        return planSnap.data() as PlanType;
+      } else {
+       return "No such document!";
+      }
+    }
+
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
