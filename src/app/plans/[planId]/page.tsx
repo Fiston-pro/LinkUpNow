@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useAuth, PlanType } from '@/components/AuthContext';
 
 import { RxCross2 } from "react-icons/rx";
@@ -13,7 +13,6 @@ import { MdAccessTime, MdCalendarToday, MdLocationOn, MdPerson } from "react-ico
 
 export default function PlanPage() {
 
-  const router = useRouter();
   const pathname = usePathname();
 
   const [planData, setPlanData] = useState<PlanType>();

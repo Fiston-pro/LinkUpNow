@@ -14,7 +14,6 @@ import { auth, db } from '@/lib/firebase/initFirebase';
 import { collection, orderBy, limit, getDocs, query, doc, setDoc, getDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 
-const provider = new GoogleAuthProvider();
 // Type interface
 export interface UserType {
     email: string | null;
@@ -23,6 +22,13 @@ export interface UserType {
     plansCreated: string[] | null;
     name: string | null;
     createdAt?: any;
+    photoURL: string | null;
+}
+
+export interface OtherUserType {
+    name: string|null;
+    email: string;
+    photoURL: string|null;
 }
 
 export interface HostelType {
@@ -44,7 +50,22 @@ export interface PlanType {
     maxParticipants?: number; // Optional maximum number of participants
     createdAt: string; // Timestamp of creation
   };
-  
+  // Chat's interfaces
+export interface MessageType {
+    message: string; // Message text
+    timestamp: string; // Timestamp of creation
+    userId: string; // userId of the sender
+    name: string; // Name of the sender
+    profilePic: string; // URL of the sender's profile picture
+  };
+
+export interface ChatType {
+    id: string; // Firestore-generated ID
+    name: string; // Name of the chat
+    lastMessage: string; // Last message in the chat
+    messages: MessageType[]; // Array of messages
+    participants: string[]; // Array of userIds    
+  };
 
 // Create auth context
 const AuthContext = createContext({});
@@ -59,7 +80,7 @@ export const AuthContextProvider = ({
     children: React.ReactNode;
 }) => {
     // Define the constants for the user and loading state
-    const [user, setUser] = useState<UserType>({ email: null, uid: null, plansJoined: null, plansCreated: null, name: null });
+    const [user, setUser] = useState<UserType>({ email: null, uid: null, plansJoined: null, plansCreated: null, name: null, photoURL: null });
     const [loading, setLoading] = useState<Boolean>(true);
     const [hostels, setHostels] = useState<HostelType[]>([]);
 
@@ -74,10 +95,11 @@ export const AuthContextProvider = ({
                     uid: user.uid,
                     plansJoined: null,
                     plansCreated: null,
-                    name: user.displayName
+                    name: user.displayName,
+                    photoURL: user.photoURL
                 });
             } else {
-                setUser({ email: null, uid: null, plansJoined: null, plansCreated: null, name: null });
+                setUser({ email: null, uid: null, plansJoined: null, plansCreated: null, name: null, photoURL: null });
             }
         });
 
@@ -86,10 +108,10 @@ export const AuthContextProvider = ({
         return () => unsubscribe();
     }, []);
 
-    const createUser = async (uid: string, email: string|null, name: string|null ) => {
+    const createUser = async (uid: string, email: string|null, name: string|null, photoURL: string|null ) => {
         const usersRef = collection(db, "users");
         await setDoc(doc(usersRef, uid), {
-          name: name, createdAt: serverTimestamp(), email: email, plansJoined: [], plansCreated: [], uid: uid
+          name: name, createdAt: serverTimestamp(), email: email, plansJoined: [], plansCreated: [], uid: uid, photoURL: photoURL
         });
        };
     
@@ -110,10 +132,10 @@ export const AuthContextProvider = ({
         signInWithPopup(auth, provider)
         .then(async (result) => {
           // This gives you a Google Access Token. You can use it to access the Google API.
-          console.log( 'uid:', result.user.uid);
+          console.log( 'all the user:', result.user);
         const docRef = doc(db, "users", result.user.uid);
         const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) { await createUser( result.user.uid, result.user.email, result.user.displayName)} //check if a use arleady exists before making a new one
+        if (!docSnap.exists()) { await createUser( result.user.uid, result.user.email, result.user.displayName, result.user.photoURL)} //check if a use arleady exists before making a new one
         await getUserAdditionalData(result.user.uid);
         console.log("Signin Successfully")
         router.push('/');
@@ -156,9 +178,6 @@ export const AuthContextProvider = ({
           console.error("Google sign-in failed:", error);
         }
       };
-    
-      console.log('User:', user);
-
 
     // Admin stuff
     // Function to add a new hostel
@@ -277,9 +296,21 @@ export const AuthContextProvider = ({
       }
     }
 
+    //function to get user data by uid and only return the name, photoUrl and email
+    const getOtherUserData = async (uid: string) => {
+      const userDoc = doc(db, "users", uid);
+      const userSnap = await getDoc(userDoc);
+      if (userSnap.exists()) {
+        return userSnap.data() as OtherUserType;
+      } else {
+       return "No such document!";
+      }
+    }
+
+
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );

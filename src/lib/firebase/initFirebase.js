@@ -3,7 +3,8 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getMessaging, isSupported } from "firebase/messaging";
+import { getDatabase } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,7 +17,9 @@ const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: "G-KJYYBVYJ13"
+  measurementId: "G-KJYYBVYJ13",
+
+  databaseURL: "https://linkupnow-5d0b2-default-rtdb.europe-west1.firebasedatabase.app/",
 };
 
 // Initialize Firebase
@@ -28,5 +31,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 // const messaging = isSupported().then(() => getMessaging(app)).catch(() => null);
 
-export { auth, db };
+const chatdb = getDatabase(app);
+
+export { auth, db, chatdb };
 

@@ -1,0 +1,57 @@
+{
+    "chats": {
+      "one": {
+        "title": "Plan wassup",
+        "lastMessage": "Fisi: Drop the address",
+        "timestamp": 1459361875666
+      },
+      "two": { "..." },
+      "three": { "..." }
+    },
+    "members": {
+      "one": {
+        "Fisi": true,
+        "Fab": true,
+        "Rumuli": true
+      },
+      "two": { "..." },
+      "three": { "..." }
+    },
+    "messages": {
+      "one": {
+        "m1": {
+          "name": "eclarke",
+          "message": "The relay seems to be malfunctioning.",
+          "timestamp": 1459361875337
+        },
+        "m2": { "..." },
+        "m3": { "..." }
+      },
+      "two": { "..." },
+      "three": { "..." }
+    },
+    "users": {
+        "alovelace": {
+            "name": "Ada Lovelace",
+            "groups": {
+                "techpioneers": true,
+                "womentechmakers": true
+            },
+            "created": {
+                "techpioneers": true,
+                "womentechmakers": true
+            },
+        },
+    },
+    // "groups": {
+    //     "techpioneers": {
+    //         "name": "Historical Tech Pioneers",
+    //         "members": {
+    //             "alovelace": true,
+    //             "ghopper": true,
+    //             "eclarke": true
+    //         }
+    //     },
+    // }
+
+}
