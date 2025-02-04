@@ -11,6 +11,9 @@ import { GoReport } from "react-icons/go";
 import Members from "@/components/common/Members";
 import { MdAccessTime, MdCalendarToday, MdLocationOn, MdPerson } from "react-icons/md";
 
+// import router
+import { useRouter } from 'next/navigation';
+
 export default function PlanPage() {
 
   const pathname = usePathname();
@@ -18,6 +21,8 @@ export default function PlanPage() {
   const [planData, setPlanData] = useState<PlanType>();
 
   const { getPlanData } = useAuth();
+
+  const router = useRouter();
 
   useEffect(() => {
     const parts = pathname.split('/');
@@ -44,7 +49,7 @@ export default function PlanPage() {
         <div className="relative flex flex-col h-full">
           {/* Modal Content */}
             <div className="fixed w-full top-0 left-0 p-4 flex justify-between ">
-                <button className="bg-secondary text-white text-2xl rounded-full p-2">
+                <button onClick={()=> router.back() } className="bg-secondary text-white text-2xl rounded-full p-2">
                     <RxCross2/>
                 </button>
 
