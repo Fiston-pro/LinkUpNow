@@ -90,14 +90,7 @@ export const AuthContextProvider = ({
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUser({
-                    email: user.email,
-                    uid: user.uid,
-                    plansJoined: null,
-                    plansCreated: null,
-                    name: user.displayName,
-                    photoURL: user.photoURL
-                });
+              getUserAdditionalData(user.uid);
             } else {
                 setUser({ email: null, uid: null, plansJoined: null, plansCreated: null, name: null, photoURL: null });
             }
@@ -307,10 +300,21 @@ export const AuthContextProvider = ({
       }
     }
 
+    //function to change the user's name
+    const changeUserName = async (newName: string) => {
+      if (user.uid) {
+        const userDoc = doc(db, "users", user.uid);
+        await setDoc(userDoc, {name: newName}, { merge: true });
+        getUserAdditionalData(user.uid)
+      } else {
+        console.log("User uid not found");
+      }
+    }
+
 
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData, changeUserName }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
