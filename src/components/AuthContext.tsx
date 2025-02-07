@@ -301,17 +301,6 @@ export const AuthContextProvider = ({
       }
     }
 
-    //function to get user data by uid and only return the name, photoUrl and email
-    const getOtherUserData = async (uid: string) => {
-      const userDoc = doc(db, "users", uid);
-      const userSnap = await getDoc(userDoc);
-      if (userSnap.exists()) {
-        return userSnap.data() as OtherUserType;
-      } else {
-       return "No such document!";
-      }
-    }
-
     //function to change the user's name
     const changeUserName = async (newName: string) => {
       if (user.uid) {
@@ -378,10 +367,25 @@ export const AuthContextProvider = ({
       }
     };
 
+    //function to get user id and return the user name or email and photoUrl
+    const getUserById = async (id: string) => {
+      console.log('here is id:', id);
+      const userDoc = doc(db, "users", id);
+      const userSnap = await getDoc(userDoc);
+      if (userSnap.exists()) {
+        const temp = userSnap.data() as OtherUserType;
+        console.log('temp:', temp);
+        return temp;
+      } else {
+       return "No such document!";
+      }
+    }
+
+
 
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData, changeUserName, removeUserFromPlan, addUserToPlan }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, changeUserName, removeUserFromPlan, addUserToPlan, getUserById }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );

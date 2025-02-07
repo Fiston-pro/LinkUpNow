@@ -135,9 +135,9 @@ export default function HostelPage() {
 
                 </div>
                 <div className="p-4">
-                  <div className="flex justify-end mb-2">
+                  {/* <div className="flex justify-end mb-2">
                     <span className="text-xs">Damian (Host)</span>                        
-                  </div>
+                  </div> */}
                   <div className="flex flex-row items-center justify-between">
                     <h3 className="text-lg font-bold">{plan.description}</h3>
                     <button 

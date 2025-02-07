@@ -17,7 +17,7 @@ export default function ProfilePage() {
  
   const handleLogOut = async () => {
     await logOut();
-    router.push('/');
+    router.push('/signin');
   };
 
   const handleProfilePicChange = (e) => {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { usePathname } from 'next/navigation'
-import { useAuth, PlanType } from '@/components/AuthContext';
+import { useAuth, PlanType, OtherUserType } from '@/components/AuthContext';
 
 import { RxCross2 } from "react-icons/rx";
 import { GoReport } from "react-icons/go";
@@ -21,21 +21,35 @@ export default function PlanPage() {
 
   const pathname = usePathname();
 
-  const { user, getPlanData, removeUserFromPlan, addUserToPlan } = useAuth();
+  const { user, getPlanData, removeUserFromPlan, addUserToPlan, getUserById } = useAuth();
 
   const [planData, setPlanData] = useState<PlanType>();
   const [isUserJoined, setIsUserJoined] = useState(false);
+  
+  const [creatorData, setCreatorData] = useState<OtherUserType | null>(null);
+  const [participantsData, setParticipantsData] = useState<OtherUserType[]>([]);
+
 
   const router = useRouter();
 
-  useEffect(() => {
+  useEffect( () => {
     const parts = pathname.split('/');
     const planId = parts[2]; // This will give you '1737397179478'
     console.log(planId); // Output: 1737397179478
-    getPlanData(planId).then((data:PlanType) => {
+    getPlanData(planId).then(async (data:PlanType) => {
       setPlanData(data);
       console.log('plan data here:', data);
       setIsUserJoined(user?.plansJoined?.includes(data.id) || user?.plansCreated?.includes(data.id));
+
+      // Fetch creator data
+      const creator = await getUserById(data.createdBy);
+      console.log('creator data:', creator);
+      setCreatorData(creator);
+
+      // Fetch participants data
+      const participants = await Promise.all(data.participants.map((participantId: string) => getUserById(participantId)));
+      console.log('participants data:', participants);
+      setParticipantsData(participants);
     });
   }, [pathname])
 
@@ -90,14 +104,9 @@ export default function PlanPage() {
               <p className="text-textSecondary">{planData?.description}</p>
             </section>
 
-            {/* Participants */}
-            <section className="mb-6">
-              <Members participants={5} />
-            </section>
-
             {/* Plan Details */}
             <section className="mb-6">
-              <div className=" space-y-2 ">
+              <div className=" space-y-2  ">
                 {/* Date */}
                 <div className="flex items-center space-x-2">
                     <div className="bg-secondary rounded-full text-white p-3">
@@ -120,16 +129,16 @@ export default function PlanPage() {
                   </div>
                 </div>
 
-                {/* Created by */}
-                <div className="flex items-center space-x-2">
-                <div className="bg-secondary rounded-full text-white p-3">
-                    <MdPerson className="text-orange-400 text-2xl" />
-                </div>
-                  <div>
-                    <h5 className="text-lg font-semibold">Created by</h5>
-                    <p className="text-textSecondary">{planData?.createdBy}</p>
-                  </div>
-                </div>
+                {/* Creator Information */}
+                <section className="mb-6 flex items-center space-x-2">
+                    {creatorData?.photoURL && (
+                        <img src={creatorData?.photoURL} alt="Creator" className="w-12 h-12 rounded-full" />
+                    )}
+                    <div>
+                        <h4 className="text-xl font-semibold">{creatorData?.name || creatorData?.email || 'Anonymous'}</h4>
+                        <p className="text-textSecondary">Creator</p>
+                    </div>
+                </section>
 
                 {/* Location */}
                 <div className="flex items-center space-x-2">
@@ -138,9 +147,27 @@ export default function PlanPage() {
                 </div>
                   <div>
                     <h5 className="text-lg font-semibold">Location</h5>
-                    <p className="text-textSecondary">Here</p>
+                    <p className="text-textSecondary">On the premises</p>
                   </div>
                 </div>
+
+                {/* Participants */}
+                <section className="mb-6">
+                    <h4 className="text-xl font-semibold mb-2">Participants</h4>
+                    <div className="flex flex-wrap space-x-4">
+                        {participantsData?.map((participant, index) => (
+                            <div key={index} className="flex items-center space-x-2 mb-2">
+                                {participant.photoURL && (
+                                    <img src={participant.photoURL} alt={participant.name||'Name missing'} className="w-10 h-10 rounded-full" />
+                                )}
+                                <p className="text-textPrimary">{participant.name}</p>
+                            </div>
+                        ))}
+                        {!participantsData.length && (
+                            <p className="text-textSecondary">Be the first to join!</p>
+                        )}
+                    </div>
+                </section>
 
                 {/* Participants */}
                 {/* <div className="flex items-center space-x-2">
