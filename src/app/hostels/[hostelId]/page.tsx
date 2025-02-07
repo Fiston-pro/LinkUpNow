@@ -7,9 +7,14 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import ImageProfile from '../../../../images/Users/pushkar.jpg'
 
-import {  FaChevronRight } from "react-icons/fa";
+import {  FaChevronRight, FaPlus } from "react-icons/fa";
 
 import {  MdCalendarToday,  MdLocationOn } from "react-icons/md";
+
+import AddPlanModal from '@/components/common/AddPlanModal';
+
+import { format } from 'date-fns';
+import { Timestamp } from 'firebase/firestore';
 
 export interface HostelType {
   id: string; // Firestore-generated ID
@@ -23,7 +28,7 @@ export interface PlanType {
   id: string; // Firestore-generated ID
   name: string; // Name of the plan (e.g., "Beach Cleanup")
   description: string; // Plan description
-  eventTime: string; // When the plan happens
+  eventTime: Date; // When the plan happens
   hostelId: string; // Reference to the associated hostel (hostelId)
   createdBy: string; // userId of the creator
   participants: string[]; // Array of userIds
@@ -36,12 +41,30 @@ export default function HostelPage() {
   const router = useRouter();
   const pathname = usePathname()
 
-  const { getHostelData, getPlanData } = useAuth();
+  const { getHostelData, getPlanData, addNewPlan } = useAuth();
 
   const [hostelData, setHostelData] = useState<HostelType>();
   const [plans, setPlans] = useState<PlanType[]>();
 
-   
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSavePlan = async (name: string, description: string, eventTime: Date)  => {
+    if (!hostelData) return;
+    const newPlans = await addNewPlan(name, description, eventTime, hostelData.id);
+    setIsModalOpen(false);
+    setPlans(newPlans);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  }
+
+  // Function to format the event time
+  const formatEventTime = (eventTime:Timestamp) => {
+    const date = eventTime.toDate();
+    return format(date, 'PPpp'); // 'p' is the format string for time in date-fns
+  };
+
   useEffect(() => {
     const parts = pathname.split('/');
     const hostelId = parts[2]; // This will give you '1737397179478'
@@ -72,8 +95,8 @@ export default function HostelPage() {
 
   return (
     <>
-    <div className="relative w-auto">
-      <div className="relative h-full overflow-hidden rounded-lg">
+    <div className="relative w-auto ">
+      <div className="relative h-full overflow-hidden rounded-lg ">
         <div className="flex items-center justify-center border-b-2 border-highlight py-2 m-4 rounded-md shadow-md">
 
           <h1 className="text-4xl font-bold tracking-wider uppercase bg-gradient-to-r from-warning via-blue-500 to-purple-600 text-transparent bg-clip-text">
@@ -94,7 +117,7 @@ export default function HostelPage() {
               </div>
             </div>
         </div>
-        {plans?.map((plan, index) => (
+        {plans?.map((plan) => (
             <div
                 key={plan.id}
                 className="m-4 bg-secondary text-white rounded-lg bg-opacity-60 border-2 border-[#6e34a7]"
@@ -102,8 +125,8 @@ export default function HostelPage() {
                 <div className="p-4 bg-mainBg rounded-t-lg bg-opacity-60">
                     <h2 className="text-lg font-bold">{plan.name}</h2>
                     <div className="flex flex-row items-center space-x-1 text-xs">
-                      <MdCalendarToday /> 
-                      <span>{plan.eventTime}</span>
+                      <MdCalendarToday />                       
+                      <span>{formatEventTime(plan.eventTime)}</span>
                     </div>
                     <div className="flex flex-row items-center space-x-1 text-xs">
                       <MdLocationOn /> 
@@ -131,6 +154,17 @@ export default function HostelPage() {
         ))}
         </div>
     </div>
+    { !isModalOpen &&
+    <div
+      onClick={() => setIsModalOpen(true)}
+      className="fixed bottom-28 right-5 z-50 p-2 bg-highlight text-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out hover:bg-highlight-dark hover:scale-105 focus:outline-none focus:ring-2 focus:ring-highlight border-4 border-white animate-pulse"
+      aria-label="Open AI Chat"
+      role="button"
+      tabIndex={0}
+    >
+      <FaPlus size={40} />
+    </div>}
+    <AddPlanModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSavePlan} />
 </>
   );
 }

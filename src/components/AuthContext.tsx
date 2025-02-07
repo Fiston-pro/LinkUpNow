@@ -191,9 +191,21 @@ export const AuthContextProvider = ({
     };
 
     // Function to fetch plans for a specific hostel
-    const fetchPlansForHostel = (hostelId: string): Plan[] => {
-      const hostel = hostels.find((h) => h.id === hostelId);
-      return hostel ? hostel.plans : [];
+    const fetchPlansForHostel = async  (hostelId: string): Plan[] => {
+      // fetch the array of plans in the hostel data using hostelId
+      const hostelsRef = collection(db, "hostels");
+      const hostelDoc = doc(hostelsRef, hostelId);
+      const hostelSnap = await getDoc(hostelDoc);
+      if (hostelSnap.exists()) {
+        const hostelData = hostelSnap.data() as HostelType;
+        if (hostelData.plans) {
+          const plansData = hostelData.plans.map((planId) => {
+            return getPlanData(planId);
+          });
+          return Promise.all(plansData);
+        }
+      }
+      return [];    
     };
 
     // Function to add a new plan to a hostel
