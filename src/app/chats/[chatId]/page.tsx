@@ -5,6 +5,9 @@ import Image from 'next/image';
 import DummyImage from '../../../../images/Users/dummyImageUser.jpg';
 import { ref, onValue, push, set } from 'firebase/database';
 import { chatdb } from '@/lib/firebase/initFirebase';
+import { useRouter } from 'next/navigation';
+import { FaArrowLeft} from 'react-icons/fa';
+
 
 import { usePathname } from 'next/navigation'
 
@@ -20,6 +23,8 @@ export default function ChatPage() {
   const [planId, setPlanId] = useState('');
 
   const pathname = usePathname();
+  const router = useRouter();
+
 
   const { user } = useAuth();
 
@@ -59,14 +64,23 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col justify-between h-screen px-8 pt-14 backdrop-blur-md bg-[rgba(26,16,52,0.7)] text-white rounded-3xl shadow-2xl overflow-hidden">
-      <header className="flex flex-col mb-6 border-b border-secondary pb-4">
+    <div className="flex flex-col justify-between h-screen px-8 pt-14 backdrop-blur-md bg-[rgba(26,16,52,0.7)] text-white rounded-3xl shadow-2xl overflow-hidden">      
+        
+        <button onClick={()=> router.back() } className=" bg-secondary text-white text-2xl rounded-full p-2 w-10 h-10 mb-1">
+          <FaArrowLeft/>
+        </button>
+      <header className="flex flex-col mb-6 mt-1 border-b border-secondary pb-4">
         <h2 className="text-xl font-bold text-white tracking-wide">Plan Group Chat</h2>
         <p className="text-sm text-textSecondary mt-1">Connect with your group on this plan</p>
       </header>
 
       {/* Chat Messages */}
       <section className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+        {messages.length === 0 && (
+          <div className="text-center text-textSecondary">
+            <p>No messages yet. Be the first to start the conversation!</p>
+          </div>
+        )}
         {messages.map( (msg) => {
           
           const sender = getUserById(msg.userId, messages);

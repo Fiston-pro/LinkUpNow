@@ -11,7 +11,7 @@ export default function AuthPage() {
   const [error, setError] = useState("");
 
   // Use the methods from the AuthContext
-  const { logIn, signUp, googleSignIn, SignUpWithGoogle, user } = useAuth();
+  const { logIn, signUp, SignUpWithGoogle, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {

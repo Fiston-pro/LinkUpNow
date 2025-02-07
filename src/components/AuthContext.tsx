@@ -11,7 +11,7 @@ import {
     signOut
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase/initFirebase';
-import { collection, orderBy, limit, getDocs, query, doc, setDoc, getDoc, serverTimestamp, deleteDoc } from "firebase/firestore";
+import { collection, orderBy, limit, getDocs, query, doc, setDoc, getDoc, serverTimestamp, deleteDoc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 
 // Type interface
@@ -323,10 +323,65 @@ export const AuthContextProvider = ({
       }
     }
 
+    // Function to remove the user from a plan, where remove the user id from plans participants and remove plan id from user's plansJoined and plansCreated
+    const removeUserFromPlan = async (planId: string) => {
+      if (!user?.uid) {
+        console.log("User uid not found");
+        console.log('user:', user);
+        return;
+      }
+    
+      const userDoc = doc(db, "users", user.uid);
+      const planDoc = doc(db, "plans", planId);
+    
+      try {
+        // Remove the plan ID from the user's plansJoined and plansCreated arrays
+        await updateDoc(userDoc, {
+          plansJoined: arrayRemove(planId),
+          plansCreated: arrayRemove(planId)
+        });
+    
+        // Remove the user ID from the plan's participants array
+        await updateDoc(planDoc, {
+          participants: arrayRemove(user.uid)
+        });
+    
+        console.log(`User ${user.uid} removed from plan ${planId}`);
+      } catch (error) {
+        console.error("Error removing user from plan: ", error);
+      }
+    };
+
+    const addUserToPlan = async (planId: string) => {
+      if (!user?.uid) {
+        console.log("User uid not found");
+        return;
+      }
+    
+      const userDoc = doc(db, "users", user.uid);
+      const planDoc = doc(db, "plans", planId);
+    
+      try {
+        // Add the plan ID to the user's plansJoined array
+        await updateDoc(userDoc, {
+          plansJoined: arrayUnion(planId)
+        });
+    
+        // Add the user ID to the plan's participants array
+        await updateDoc(planDoc, {
+          participants: arrayUnion(user.uid)
+        });
+    
+        console.log(`User ${user.uid} added to plan ${planId}`);
+      } catch (error) {
+        console.error("Error adding user to plan: ", error);
+      }
+    };
+
 
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData, changeUserName }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, getOtherUserData, changeUserName, removeUserFromPlan, addUserToPlan }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
