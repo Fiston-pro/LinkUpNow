@@ -1,6 +1,6 @@
 # 😊 LinkUpNow
 
-**LinkUpNow** is a gamified socializing app designed for lyf co-living spaces, aimed at fostering a stronger sense of community among residents. With LinkUpNow, residents can easily connect, plan activities, and earn community points ("Smiles") that reward their participation in the community.
+**LinkUpNow** is a socializing app designed for co-living spaces, aimed at fostering a stronger sense of community among residents. With LinkUpNow, residents can easily connect, plan activities in the community.
 
 ## 🚀 Live Demo
 
