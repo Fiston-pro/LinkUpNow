@@ -30,7 +30,7 @@ const CreateCommunityPage: React.FC = () => {
     console.log('Community created successfully:', newCommunity);
  
     // Simulate community creation (replace with API call)
-    const qrValue = `https://linkupnow.com/hostels/${newCommunity}`; // URL for QR code
+    const qrValue = `https://link-up-now.vercel.app/hostels/${newCommunity}`; // URL for QR code
     setQrCodeValue(qrValue);
     setCommunityCreated(true);
   };
