@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from 'next/navigation'
 
-import ImageProfile from '../../../../images/Users/pushkar.jpg'
+import DummyImage from '../../../../images/Users/dummyImageUser.jpg';
 
 import {  FaChevronRight, FaPlus } from "react-icons/fa";
 
@@ -41,7 +41,7 @@ export default function HostelPage() {
   const router = useRouter();
   const pathname = usePathname()
 
-  const { getHostelData, getPlanData, addNewPlan } = useAuth();
+  const { user, getHostelData, getPlanData, addNewPlan } = useAuth();
 
   const [hostelData, setHostelData] = useState<HostelType>();
   const [plans, setPlans] = useState<PlanType[]>();
@@ -109,14 +109,22 @@ export default function HostelPage() {
                   <div
                     className="absolute -top-1 -left-1 w-20 h-20 rounded-full z-0 bg-highlight shadow-lg"></div>
                   <Image
-                    src= {ImageProfile}
+                    onClick={() => router.push('/profile')}
+                    src= {user?.photoURL || DummyImage}
                     alt=' My profile picture'
-                    className="rounded-full w-20 h-20 relative z-10"
+                    width={80}
+                    height={80}
+                    className="rounded-full relative z-10"
                   />
                 </div>
               </div>
             </div>
         </div>
+        {plans?.length === 0 && (
+          <div className="flex items-center justify-center p-4">
+            <h2 className="text-lg font-bold">No plans yet! Create one now!</h2>
+          </div>
+        )}  
         {plans?.map((plan) => (
             <div
                 key={plan.id}
