@@ -16,14 +16,14 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user.uid) {
-      router.push('/');
+      router.push('/home');
     }
   }, [user, router]);
 
   const handleLogin = async () => {
     try {
       await logIn(email, password);
-      router.push('/');
+      router.back();
     } catch (error) {
       console.error("Login failed:", error);
       setError("Login failed: " + error.message)
@@ -33,7 +33,7 @@ export default function AuthPage() {
   const handleSignup = async () => {
     try {
       await signUp(email, password);
-      router.push('/');
+      router.back();
     } catch (error) {
       console.error("Signup failed:", error);
       setError("Signup failed: " + error.message);

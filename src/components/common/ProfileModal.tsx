@@ -80,7 +80,7 @@ export default function Profile({ isOpen, onClose, user }) {
           <button 
             onClick={() => {
               logOut();
-              router.push('/');
+              router.push('/home');
           }}
           className="mt-6 mb-6 py-2 px-6 bg-highlight text-mainBg font-bold rounded-full">
             LogOut

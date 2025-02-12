@@ -6,7 +6,6 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     GoogleAuthProvider,
-    getRedirectResult, 
     signInWithPopup,
     signOut
 } from 'firebase/auth';
@@ -131,7 +130,7 @@ export const AuthContextProvider = ({
         if (!docSnap.exists()) { await createUser( result.user.uid, result.user.email, result.user.displayName, result.user.photoURL)} //check if a use arleady exists before making a new one
         await getUserAdditionalData(result.user.uid);
         console.log("Signin Successfully")
-        router.push('/');
+        router.back();
         }).catch((error) => {
           console.log("Signin failed:", error);
         });
@@ -166,7 +165,7 @@ export const AuthContextProvider = ({
         try {
           const result = await signInWithPopup(auth, provider);
           console.log('User signed in:', result.user);
-          router.push('/');
+          router.back();
         } catch (error) {
           console.error("Google sign-in failed:", error);
         }
@@ -189,6 +188,25 @@ export const AuthContextProvider = ({
       });
       return await refreshHostels();
     };
+
+    // function to create a community
+    const createCommunity = async (communityName: string) => {
+      // add the hostel to the firebase database
+      const hostelId = `${Date.now()}`;
+      console.log('hostelId:', hostelId);
+
+      const hostelsRef = collection(db, "hostels");
+      await setDoc(doc(hostelsRef, hostelId), {
+        id: hostelId,
+        name: communityName,
+        location: "",
+        plans: [],
+        createdBy: user.uid,
+      })
+      console.log('auth hostelId:', hostelId);
+      return hostelId.toString();
+    }
+
 
     // Function to fetch plans for a specific hostel
     const fetchPlansForHostel = async  (hostelId: string): Plan[] => {
@@ -385,7 +403,7 @@ export const AuthContextProvider = ({
 
     // Wrap the children with the context provider
     return (
-        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, changeUserName, removeUserFromPlan, addUserToPlan, getUserById }}>
+        <AuthContext.Provider value={{ user, signUp, logIn, googleSignIn, logOut, SignUpWithGoogle, addHostel, fetchPlansForHostel, refreshHostels, deleteHostel, addNewPlan, getHostelData, getPlanData, changeUserName, removeUserFromPlan, addUserToPlan, getUserById, createCommunity }}>
             {loading ? null : children}
         </AuthContext.Provider>
     );
