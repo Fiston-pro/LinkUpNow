@@ -27,6 +27,7 @@ Check out our live demo here: [🌐 Live Demo](https://link-up-now.vercel.app/)
 - **Reward Voucher System**: Redeem community points for discounts and vouchers within lyf's network. 🎁
 - **Real-time Social Interaction**: Connect with residents, join hangouts, and chat with plan participants in real time. 💬
 - **Temporary Account for New Users**: Users receive a unique link for temporary access to the app, allowing exploration without account creation. 🔗
+- **Create a new community**: Users can create a new community where you can post new plans where you can share others and join
 
 ## 🛠️ Tech Stack
 
