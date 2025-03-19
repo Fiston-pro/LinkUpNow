@@ -4,7 +4,7 @@
 
 ## 🚀 Live Demo
 
-Check out our live demo here: [🌐 Live Demo](https://link-up-now.vercel.app/)
+Check out our live demo here: [🌐 Live Demo](https://link-up-now.vercel.app/home)
 
 ## 📚 Table of Contents
 
